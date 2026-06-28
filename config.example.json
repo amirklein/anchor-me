@@ -1,0 +1,75 @@
+{
+  "enabled": true,
+  "activeProfile": "job_search",
+  "interventionMode": "proactive",
+  "currentGoal": "Convert assignment hours into interview-ready deliverables — thesis + proof, not endless polish",
+  "goalKeywords": ["assignment", "interview", "hibob", "aligned", "sympera", "cursor", "slides"],
+  "assignmentKeywords": ["hibob", "bob-onboard", "sympera", "deel", "take-home", "mvp"],
+  "familiarStillsPath": null,
+  "lookbackHours": 6,
+  "workBlockGapMinutes": 25,
+  "checkWindowMinutes": 45,
+  "cooldownMinutes": 45,
+  "watchIntervalMinutes": 0,
+  "proactive": {
+    "pollSeconds": 90,
+    "debounceSeconds": 60,
+    "evaluationWindowMinutes": 30,
+    "driftSustainedMinutes": 10,
+    "wisprMinChars": 80,
+    "maxClipboardChars": 8000,
+    "chimeCooldownMinutes": 25,
+    "topicScoreLow": 0.35
+  },
+  "thresholds": {
+    "distractionMinutes": 20,
+    "contextSwitchesPerWindow": 18,
+    "aiLoopMinutes": 35,
+    "slidesWithoutBuildMinutes": 45
+  },
+  "distractionTitlePatterns": [
+    "linkedin",
+    "relationship",
+    "whatsapp",
+    "feed |",
+    "top job picks",
+    "google gemini",
+    "youtube",
+    "etrade",
+    "stock plan"
+  ],
+  "distractionApps": ["‎WhatsApp", "Spotify"],
+  "buildSurfaces": ["Cursor", "Terminal", "Visual Studio Code", "Code"],
+  "researchSurfaces": ["Claude", "Google Chrome"],
+  "polishTitlePatterns": ["google slides", "lovable", "gemini", "preview"],
+  "successSignals": [
+    "time on assignment brief + deliverable",
+    "submitted or rehearsed narrative"
+  ],
+  "antiPatterns": [
+    "gemini critique loop without editing deck",
+    "new research after thesis is clear",
+    "meta tooling during active deadline"
+  ],
+  "synthesis": {
+    "style": "coaching",
+    "useApiForReview": false
+  },
+  "driftRules": {
+    "wisprOffTopic": true,
+    "distractionStreak": true,
+    "aiLoop": true,
+    "polishSpiral": true,
+    "topicPivot": true,
+    "wisprDistractionSpike": true,
+    "sentimentEnabled": true,
+    "useApiForDrift": false,
+    "offTopicPhrases": ["bread making", "dating apps", "vacation planning"],
+    "onTopicPhrases": ["hibob", "take-home", "assignment", "interview prep"]
+  },
+  "_comments": {
+    "interventionMode": "proactive = fg guardian start (event-driven drift). manual = opt-out. fg review = retrospective.",
+    "proactive": "Reacts to new Familiar clipboards/stills with debounce; chimes only on sustained drift.",
+    "familiar": "Wispr/dictation appears in .clipboard.txt — primary intent signal for drift."
+  }
+}
