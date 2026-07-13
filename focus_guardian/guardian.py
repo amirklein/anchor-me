@@ -17,6 +17,7 @@ from focus_guardian.drift import DriftAssessment, evaluate_drift
 from focus_guardian.familiar import stills_root
 from focus_guardian.focus import with_resolved_focus
 from focus_guardian.notify import notify_drift_chime
+from focus_guardian.review_scheduler import maybe_run_scheduled_reviews
 from focus_guardian.paths import (
     guardian_pid_path,
     last_report_path,
@@ -66,6 +67,8 @@ def _guardian_loop() -> None:
     with log_path().open("a", encoding="utf-8") as f:
         f.write(f"{datetime.now().isoformat(timespec='seconds')} guardian started\n")
 
+    last_schedule_check = 0.0
+
     while True:
         try:
             cfg = load_config()
@@ -82,8 +85,12 @@ def _guardian_loop() -> None:
             poll = int(p.get("pollSeconds", 90))
             debounce = int(p.get("debounceSeconds", 60))
 
-            mtime = _latest_familiar_mtime(root)
             now = time.time()
+            if now - last_schedule_check >= 300:
+                maybe_run_scheduled_reviews(cfg)
+                last_schedule_check = now
+
+            mtime = _latest_familiar_mtime(root)
 
             if mtime > last_mtime:
                 last_mtime = mtime
