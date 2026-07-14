@@ -7,6 +7,7 @@ from datetime import datetime
 from focus_guardian.analyzer import Report
 from focus_guardian.focus import resolve_active_focus, with_resolved_focus
 from focus_guardian.paths import last_notify_path, log_path
+from focus_guardian.snooze import is_snoozed
 from focus_guardian.slack_client import (
     SlackError,
     format_drift_message,
@@ -57,6 +58,8 @@ def notify_drift_chime(assessment, nudge: str, cfg: dict) -> bool:
         return False
     if not _notifications_enabled(cfg):
         return False
+    if is_snoozed():
+        return False
     if should_skip_cooldown(_chime_cooldown_minutes(cfg)):
         return False
 
@@ -83,6 +86,8 @@ def maybe_notify(report: Report, cfg: dict) -> bool:
     if not report.should_notify:
         return False
     if not _notifications_enabled(cfg):
+        return False
+    if is_snoozed():
         return False
     cooldown = int(cfg.get("cooldownMinutes", 20))
     if should_skip_cooldown(cooldown):
@@ -120,6 +125,8 @@ def notify_review(
     respect_cooldown: bool = False,
 ) -> bool:
     if not _notifications_enabled(cfg):
+        return False
+    if is_snoozed():
         return False
     if respect_cooldown and should_skip_cooldown(int(cfg.get("cooldownMinutes", 20))):
         return False

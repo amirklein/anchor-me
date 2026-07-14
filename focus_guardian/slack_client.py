@@ -24,6 +24,18 @@ def _token(cfg: dict | None = None) -> str:
     return tok
 
 
+def app_token(cfg: dict | None = None) -> str:
+    tok = os.environ.get("SLACK_APP_TOKEN")
+    if not tok and cfg:
+        tok = (cfg.get("notifications") or {}).get("slack", {}).get("appToken")
+    if not tok:
+        raise SlackError(
+            "SLACK_APP_TOKEN not set. Enable Socket Mode and create an app-level token "
+            "with connections:write."
+        )
+    return tok
+
+
 def _user_id(cfg: dict) -> str:
     uid = os.environ.get("SLACK_USER_ID")
     if not uid:
@@ -84,6 +96,22 @@ def post_message(
     payload: dict[str, Any] = {"channel": channel, "text": text[:4000]}
     if blocks:
         payload["blocks"] = blocks
+    if thread_ts:
+        payload["thread_ts"] = thread_ts
+    _api("chat.postMessage", payload, token)
+    return True
+
+
+def post_to_channel(
+    channel_id: str,
+    text: str,
+    cfg: dict | None = None,
+    *,
+    thread_ts: str | None = None,
+) -> bool:
+    """Post a message to a channel (e.g. DM channel_id from inbound events)."""
+    token = _token(cfg)
+    payload: dict[str, Any] = {"channel": channel_id, "text": text[:4000]}
     if thread_ts:
         payload["thread_ts"] = thread_ts
     _api("chat.postMessage", payload, token)

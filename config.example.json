@@ -22,6 +22,8 @@
   "notifications": {
     "channel": "slack",
     "slack": {
+      "botToken": null,
+      "appToken": null,
       "userId": null
     }
   },
@@ -98,7 +100,7 @@
     "interventionMode": "proactive = fg guardian start (event-driven drift). manual = opt-out.",
     "focus": "fg focus sets day/week/month stack. Day overrides week overrides month.",
     "weekSchedule": "preset: mon-fri | sun-thu | sun-sat | mon-sun. Controls when weekly focus expires.",
-    "notifications": "Slack only. Set SLACK_BOT_TOKEN + SLACK_USER_ID env vars.",
+    "notifications": "Slack only. Set SLACK_BOT_TOKEN + SLACK_APP_TOKEN + SLACK_USER_ID env vars (or config). Enable Socket Mode for the interactive bot.",
     "reviewSchedule": "Guardian sends daily/weekly Slack summaries. weekly.day=end uses weekSchedule endDay."
   }
 }

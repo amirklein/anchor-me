@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Portable productivity companion powered by Familiar screen context"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+  "slack-sdk>=3.21.0",
+]
 
 [project.scripts]
 fg = "focus_guardian.cli:main"
