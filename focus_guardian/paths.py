@@ -79,3 +79,11 @@ def guardian_pid_path() -> Path:
 
 def log_path() -> Path:
     return state_dir() / "check.log"
+
+
+def snooze_until_path() -> Path:
+    return state_dir() / "snooze_until.txt"
+
+
+def slack_pid_path() -> Path:
+    return state_dir() / "slack.pid"

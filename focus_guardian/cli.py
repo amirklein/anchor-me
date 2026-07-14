@@ -11,6 +11,7 @@ from focus_guardian.analyzer import Finding, Report, analyze
 from focus_guardian.coach import coach_offline, coach_with_api, format_prompt
 from focus_guardian.drift import evaluate_drift
 from focus_guardian.guardian import evaluate_and_chime, start_guardian, stop_guardian
+from focus_guardian.slack_bot import start_slack_bot, stop_slack_bot
 from focus_guardian.monitor import run_once, start_monitor, stop_monitor
 from focus_guardian.notify import maybe_notify, notify_review
 from focus_guardian.paths import (
@@ -324,6 +325,17 @@ def cmd_status(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_slack(args: argparse.Namespace) -> int:
+    if args.action == "start":
+        start_slack_bot(args.foreground)
+        return 0
+    if args.action == "stop":
+        stop_slack_bot()
+        return 0
+    print("Usage: fg slack start | stop")
+    return 1
+
+
 def cmd_guardian(args: argparse.Namespace) -> int:
     if args.action == "start":
         start_guardian(args.foreground)
@@ -365,7 +377,7 @@ def cmd_init(_: argparse.Namespace) -> int:
         print(f"Familiar OK: {get_stills(load_config())}")
     else:
         print("Install Familiar on this machine and complete setup.")
-    print("Default: proactive guardian. Run: fg guardian start  |  fg review --human")
+    print("Default: proactive guardian. Run: fg guardian start  |  fg slack start  |  fg review --human")
     return 0
 
 
@@ -488,6 +500,18 @@ def main() -> int:
 
     sub.add_parser("status").set_defaults(func=cmd_status)
     sub.add_parser("init").set_defaults(func=cmd_init)
+
+    p_slack = sub.add_parser(
+        "slack",
+        help="Interactive Slack bot (Socket Mode DM listener)",
+    )
+    p_slack.add_argument(
+        "action",
+        choices=["start", "stop"],
+        help="Start or stop the Slack bot daemon",
+    )
+    p_slack.add_argument("-f", "--foreground", action="store_true")
+    p_slack.set_defaults(func=cmd_slack)
 
     p_guard = sub.add_parser(
         "guardian",
