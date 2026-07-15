@@ -1,4 +1,4 @@
-# Focus Guardian
+# Anchor
 
 Portable productivity companion: **Familiar** watches what you do on screen and clipboard (including Wispr dictation); **Focus Guardian** detects sustained drift and nudges you via **Slack**.
 
