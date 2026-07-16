@@ -92,7 +92,7 @@ def _run_listener() -> None:
             try:
                 post_to_channel(
                     channel,
-                    "Something went wrong processing that. Try *help* or check `fg slack` logs.",
+                    "Something went wrong processing that. Try *help* or check `fgr slack` logs.",
                     load_config(),
                     thread_ts=thread_ts,
                 )

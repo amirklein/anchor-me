@@ -10,6 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
+fgr = "focus_guardian.cli:main"
 fg = "focus_guardian.cli:main"
 
 [build-system]

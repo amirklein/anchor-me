@@ -46,7 +46,7 @@ HELP_TEXT = """*Focus Guardian* — talk to me in plain language.
 *Week schedule*
 • _Set week to sun-thu_
 
-Proactive drift alerts come from `fg guardian start`. I'm the interactive side (`fg slack start`)."""
+Proactive drift alerts come from `fgr guardian start`. I'm the interactive side (`fgr slack start`)."""
 
 
 def detect_intent(text: str) -> str:

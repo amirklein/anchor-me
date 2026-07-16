@@ -1,4 +1,4 @@
-"""CLI: fg review | coach | goal | profile | watch | status"""
+"""CLI: fgr review | coach | goal | profile | watch | status"""
 
 from __future__ import annotations
 
@@ -77,7 +77,7 @@ def cmd_review(args: argparse.Namespace) -> int:
 
 
 def cmd_check(args: argparse.Namespace) -> int:
-    """Short snapshot (legacy). Prefer `fg review`."""
+    """Short snapshot (legacy). Prefer `fgr review`."""
     cfg = load_config()
     report = analyze(cfg)
     out = report.to_dict()
@@ -135,7 +135,7 @@ def _goal_words_from_text(text: str) -> list[str]:
 
 
 def cmd_goal(args: argparse.Namespace) -> int:
-    """Legacy alias for `fg focus`."""
+    """Legacy alias for `fgr focus`."""
     if args.hours is not None and not args.words:
         cfg = load_config()
         cfg["lookbackHours"] = args.hours
@@ -181,9 +181,9 @@ def cmd_focus(args: argparse.Namespace) -> int:
         print(format_focus_status(cfg))
         print()
         print("Set focus (natural language):")
-        print('  fg focus "This week explore pricing, competitor analysis, and GTM" --cadence week')
-        print('  fg focus "Today: finish competitor spreadsheet" --cadence day')
-        print('  fg focus --week sun-thu')
+        print('  fgr focus "This week explore pricing, competitor analysis, and GTM" --cadence week')
+        print('  fgr focus "Today: finish competitor spreadsheet" --cadence day')
+        print('  fgr focus --week sun-thu')
         return 0
 
     text = " ".join(args.words)
@@ -296,7 +296,7 @@ def cmd_profile(args: argparse.Namespace) -> int:
     print(f"Goal: {merged.get('currentGoal')}")
     print(f"Mode: {merged.get('interventionMode')}")
     if merged.get("interventionMode") == "proactive":
-        print("Run: fg guardian start")
+        print("Run: fgr guardian start")
     return 0
 
 
@@ -331,14 +331,14 @@ def cmd_slack(args: argparse.Namespace) -> int:
         return print_slack_check(interactive=True)
     if args.action == "start":
         if print_slack_check(interactive=True) != 0:
-            print("\nFix the issues above, then run: fg slack start -f", file=sys.stderr)
+            print("\nFix the issues above, then run: fgr slack start -f", file=sys.stderr)
             return 1
         start_slack_bot(args.foreground)
         return 0
     if args.action == "stop":
         stop_slack_bot()
         return 0
-    print("Usage: fg slack check | start | stop")
+    print("Usage: fgr slack check | start | stop")
     return 1
 
 
@@ -383,13 +383,13 @@ def cmd_init(_: argparse.Namespace) -> int:
         print(f"Familiar OK: {get_stills(load_config())}")
     else:
         print("Install Familiar on this machine and complete setup.")
-    print("Default: proactive guardian. Run: fg guardian start  |  fg slack start  |  fg review --human")
+    print("Default: proactive guardian. Run: fgr guardian start  |  fgr slack start  |  fgr review --human")
     return 0
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        prog="fg",
+        prog="fgr",
         description="Focus Guardian — Familiar-powered productivity companion",
     )
     parser.add_argument("--version", action="version", version=__version__)
@@ -428,7 +428,7 @@ def main() -> int:
         "goal",
         help="Set or show today's focus (what Guardian compares you against)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog='Example: fg goal "HiBob slide and demo today"',
+        epilog='Example: fgr goal "HiBob slide and demo today"',
     )
     p_goal.add_argument(
         "words",
@@ -443,7 +443,7 @@ def main() -> int:
     p_goal.add_argument(
         "--hours",
         type=float,
-        help="How many hours fg review looks back (default 6)",
+        help="How many hours fgr review looks back (default 6)",
     )
     p_goal.add_argument(
         "--auto-keywords",
@@ -459,10 +459,10 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             'Examples:\n'
-            '  fg focus "This week explore pricing, competitors, and GTM" --cadence week\n'
-            '  fg focus "Today: competitor spreadsheet" --cadence day\n'
-            '  fg focus --week sun-thu\n'
-            '  fg focus --clear day'
+            '  fgr focus "This week explore pricing, competitors, and GTM" --cadence week\n'
+            '  fgr focus "Today: competitor spreadsheet" --cadence day\n'
+            '  fgr focus --week sun-thu\n'
+            '  fgr focus --clear day'
         ),
     )
     p_focus.add_argument("words", nargs="*", help="Focus in plain English")

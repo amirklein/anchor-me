@@ -37,7 +37,7 @@ def format_prompt(report: Report, narrative: str | None = None) -> str:
 def coach_with_api(report: Report, model: str | None = None) -> str:
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
-        raise RuntimeError("Set ANTHROPIC_API_KEY for API coaching, or use: fg coach --print")
+        raise RuntimeError("Set ANTHROPIC_API_KEY for API coaching, or use: fgr coach --print")
 
     model = model or os.environ.get("FOCUS_GUARDIAN_MODEL", "claude-sonnet-4-20250514")
     body = {

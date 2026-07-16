@@ -31,7 +31,7 @@ def synthesis_cfg(cfg: dict) -> dict:
 
 
 def _fg_bin_hint() -> str:
-    return "~/focus-guardian/.venv/bin/fg"
+    return "~/focus-guardian/.venv/bin/fgr"
 
 
 def build_dossier(
@@ -103,7 +103,7 @@ def _sentiment_notes(utterances) -> str | None:
 
 def synthesize_review_offline(dossier: ReviewDossier, cfg: dict) -> str:
     """Rich coaching-style narrative without an API."""
-    goal = dossier.goal or "(no goal set — run: fg goal \"your focus for today\")"
+    goal = dossier.goal or "(no goal set — run: fgr goal \"your focus for today\")"
     lines: list[str] = []
 
     lines.append("═" * 60)
