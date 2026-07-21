@@ -2,7 +2,7 @@
   "enabled": true,
   "activeProfile": "job_search",
   "interventionMode": "proactive",
-  "currentGoal": "Set focus with: fg focus \"...\" --cadence week",
+  "currentGoal": "Set focus with: fgr focus \"...\" --cadence week",
   "goalKeywords": [],
   "assignmentKeywords": [],
   "familiarStillsPath": null,
@@ -82,7 +82,7 @@
   ],
   "synthesis": {
     "style": "coaching",
-    "useApiForReview": false
+    "useApiForReview": true
   },
   "driftRules": {
     "wisprOffTopic": true,
@@ -92,13 +92,13 @@
     "topicPivot": true,
     "wisprDistractionSpike": true,
     "sentimentEnabled": true,
-    "useApiForDrift": false,
+    "useApiForDrift": true,
     "offTopicPhrases": ["bread making", "dating apps", "vacation planning"],
     "onTopicPhrases": []
   },
   "_comments": {
-    "interventionMode": "proactive = fg guardian start (event-driven drift). manual = opt-out.",
-    "focus": "fg focus sets day/week/month stack. Day overrides week overrides month.",
+    "interventionMode": "proactive = fgr guardian start (event-driven drift). manual = opt-out.",
+    "focus": "fgr focus sets day/week/month stack. Day overrides week overrides month.",
     "weekSchedule": "preset: mon-fri | sun-thu | sun-sat | mon-sun. Controls when weekly focus expires.",
     "notifications": "Slack only. Set SLACK_BOT_TOKEN + SLACK_APP_TOKEN + SLACK_USER_ID env vars (or config). Enable Socket Mode for the interactive bot.",
     "reviewSchedule": "Guardian sends daily/weekly Slack summaries. weekly.day=end uses weekSchedule endDay."
