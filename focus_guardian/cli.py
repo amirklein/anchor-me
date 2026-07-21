@@ -388,6 +388,14 @@ def cmd_monitor(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_mcp(_: argparse.Namespace) -> int:
+    """Run the local MCP server (stdio) for Claude Desktop, Cursor, or Codex."""
+    from focus_guardian.mcp_server import main as mcp_main
+
+    mcp_main()
+    return 0
+
+
 def cmd_init(_: argparse.Namespace) -> int:
     ensure_config()
     cfg = load_config()
@@ -522,6 +530,11 @@ def main() -> int:
 
     sub.add_parser("status").set_defaults(func=cmd_status)
     sub.add_parser("init").set_defaults(func=cmd_init)
+
+    sub.add_parser(
+        "mcp",
+        help="Run local MCP server (Claude Desktop, Cursor, Codex — no API key)",
+    ).set_defaults(func=cmd_mcp)
 
     p_slack = sub.add_parser(
         "slack",

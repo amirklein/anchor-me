@@ -9,6 +9,9 @@ dependencies = [
     "slack-sdk>=3.21.0",
 ]
 
+[project.optional-dependencies]
+mcp = ["mcp[cli]>=1.2.0"]
+
 [project.scripts]
 fgr = "focus_guardian.cli:main"
 fg = "focus_guardian.cli:main"
