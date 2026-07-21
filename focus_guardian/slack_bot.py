@@ -6,10 +6,17 @@ import os
 import signal
 import subprocess
 import sys
+import time
 from datetime import datetime
 
 from focus_guardian.paths import load_config, log_path, slack_pid_path
-from focus_guardian.slack_client import SlackError, app_token, post_to_channel, _token
+from focus_guardian.slack_client import (
+    SlackError,
+    app_token,
+    post_to_channel,
+    ssl_context,
+    _token,
+)
 from focus_guardian.slack_commands import handle_message, welcome_message
 
 
@@ -36,7 +43,7 @@ def _run_listener() -> None:
     cfg = load_config()
     bot = _token(cfg)
     app_tok = app_token(cfg)
-    web = WebClient(token=bot)
+    web = WebClient(token=bot, ssl=ssl_context())
     client = SocketModeClient(app_token=app_tok, web_client=web)
 
     def _send_welcome() -> None:
@@ -104,11 +111,8 @@ def _run_listener() -> None:
     _send_welcome()
     client.connect()
     try:
-        from slack_sdk.socket_mode.interval_runner import IntervalRunner
-
-        runner = IntervalRunner()
-        runner.start()
-        runner.join()
+        while True:
+            time.sleep(1)
     except KeyboardInterrupt:
         pass
     finally:

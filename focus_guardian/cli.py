@@ -18,6 +18,7 @@ from focus_guardian.notify import maybe_notify, notify_review
 from focus_guardian.paths import (
     config_path,
     ensure_config,
+    focus_markdown_path,
     last_report_path,
     load_config,
     save_config,
@@ -25,10 +26,12 @@ from focus_guardian.paths import (
 from focus_guardian.drift_config import drift_rules
 from focus_guardian.familiar import familiar_settings_path, stills_root as get_stills
 from focus_guardian.focus import (
+    NO_FOCUS_HINT,
     WEEK_PRESETS,
     add_focus_entry,
     clear_focus_cadence,
     format_focus_status,
+    has_active_focus,
     resolve_active_focus,
 )
 from focus_guardian.profiles import apply_profile, list_profiles
@@ -54,6 +57,9 @@ def _report_from_saved(data: dict) -> tuple[Report, str | None]:
 
 def cmd_review(args: argparse.Namespace) -> int:
     cfg = load_config()
+    if not has_active_focus(cfg):
+        print(NO_FOCUS_HINT)
+        return 0
     if getattr(args, "api", False):
         cfg = {**cfg, "synthesis": {**cfg.get("synthesis", {}), "useApiForReview": True}}
     review = review_session(cfg)
@@ -112,7 +118,7 @@ def cmd_coach(args: argparse.Namespace) -> int:
 
     if args.api:
         try:
-            text = coach_with_api(report)
+            text = coach_with_api(report, cfg=cfg)
         except RuntimeError as e:
             print(str(e), file=sys.stderr)
             print("\n--- offline coach ---\n", file=sys.stderr)
@@ -204,6 +210,7 @@ def cmd_focus(args: argparse.Namespace) -> int:
     save_config(cfg)
     print("Focus updated.")
     print(format_focus_status(cfg))
+    print(f"\nSaved to {focus_markdown_path()}")
     return 0
 
 
@@ -238,6 +245,9 @@ def cmd_paths(_: argparse.Namespace) -> int:
 
     print(f"\n3. Your goals & drift rules:")
     print(f"   {config_path()}")
+
+    print(f"\n4. Your current focus (auto-updated markdown):")
+    print(f"   {focus_markdown_path()}")
 
     print("\n" + "─" * 50)
     print("To move Familiar data (e.g. iCloud):")
@@ -351,10 +361,16 @@ def cmd_guardian(args: argparse.Namespace) -> int:
         return 0
     if args.action == "once":
         cfg = load_config()
+        if not has_active_focus(cfg):
+            print(NO_FOCUS_HINT)
+            return 0
         a = evaluate_and_chime(cfg)
         print(json.dumps(a.to_dict(), indent=2))
         return 0
     cfg = load_config()
+    if not has_active_focus(cfg):
+        print(NO_FOCUS_HINT)
+        return 0
     a = evaluate_drift(cfg)
     print(json.dumps(a.to_dict(), indent=2))
     return 0
@@ -369,6 +385,14 @@ def cmd_monitor(args: argparse.Namespace) -> int:
         return 0
     out = run_once()
     print(json.dumps(out, indent=2))
+    return 0
+
+
+def cmd_mcp(_: argparse.Namespace) -> int:
+    """Run the local MCP server (stdio) for Claude Desktop, Cursor, or Codex."""
+    from focus_guardian.mcp_server import main as mcp_main
+
+    mcp_main()
     return 0
 
 
@@ -506,6 +530,11 @@ def main() -> int:
 
     sub.add_parser("status").set_defaults(func=cmd_status)
     sub.add_parser("init").set_defaults(func=cmd_init)
+
+    sub.add_parser(
+        "mcp",
+        help="Run local MCP server (Claude Desktop, Cursor, Codex — no API key)",
+    ).set_defaults(func=cmd_mcp)
 
     p_slack = sub.add_parser(
         "slack",

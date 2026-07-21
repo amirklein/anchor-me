@@ -113,22 +113,27 @@ Optional: auto-start on login (macOS):
 ./scripts/install-launchd.sh
 ```
 
-## Use with Claude Code / Codex / Cursor
+## Use with Claude Desktop / Cursor / Codex (no API key)
 
-**Option A — Proactive Slack alerts**  
-`fgr guardian start` — drift DMs when sustained off-goal.
+Install the optional MCP extra and wire the server into your host app:
 
-**Option B — Slack bot**  
-`fgr slack start` — set focus, ask *how did today go?*, *am I drifting?*
-
-**Option C — Retrospective**  
-`fgr review --human` then `fgr coach`
-
-**Option D — API coaching**  
 ```bash
-export ANTHROPIC_API_KEY=...
-fgr review && fgr coach --api
+pip install -e ".[mcp]"
 ```
+
+See **[docs/MCP.md](docs/MCP.md)** for Claude Desktop, Cursor, and Codex CLI setup. The host app's subscription provides the model; Focus Guardian only exposes local tools (focus, drift, review).
+
+**No LLM API key required** for Slack, guardian, or MCP — rule-based paths are the default. `GEMINI_API_KEY` / `ANTHROPIC_API_KEY` are optional enrichments only.
+
+## Other interfaces
+
+**Proactive Slack alerts** — `fgr guardian start`
+
+**Slack bot** — `fgr slack start` (set focus, review, snooze)
+
+**CLI retrospective** — `fgr review --human` then `fgr coach`
+
+**Optional API coaching** — `fgr coach --api` (needs a provider key)
 
 ## Drift signals (live guardian)
 
